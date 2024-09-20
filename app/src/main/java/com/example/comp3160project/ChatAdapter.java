@@ -12,9 +12,9 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    private List<ChatMessage> chatMessages;
+    private List<ChatMessageModel> chatMessages;
 
-    public ChatAdapter(List<ChatMessage> chatMessages) {
+    public ChatAdapter(List<ChatMessageModel> chatMessages) {
         this.chatMessages = chatMessages;
     }
 
@@ -27,7 +27,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
-        ChatMessage message = chatMessages.get(position);
+        ChatMessageModel message = chatMessages.get(position);
         holder.usernameTextView.setText(message.getUsername());
         holder.messageTextView.setText(message.getMessage());
     }

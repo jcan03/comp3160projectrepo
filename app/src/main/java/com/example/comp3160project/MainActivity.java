@@ -21,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
-    private List<ChatMessage> chatMessages;
+    private List<ChatMessageModel> chatMessages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatMessages.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
+                    ChatMessageModel chatMessage = snapshot.getValue(ChatMessageModel.class);
                     if (chatMessage != null) {
                         chatMessages.add(chatMessage);
                     }
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendMessage(String username, String message) {
         long timestamp = System.currentTimeMillis();
-        ChatMessage chatMessage = new ChatMessage(username, message, timestamp);
+        ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp);
 
         // Push message to Firebase
         messageRef.push().setValue(chatMessage).addOnCompleteListener(task -> {
