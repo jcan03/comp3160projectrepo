@@ -1,15 +1,15 @@
 package com.example.comp3160project;
 
-public class ChatMessage {
+public class ChatMessageModel {
     private String username;
     private String message;
     private long timestamp;
 
-    public ChatMessage() {
+    public ChatMessageModel() {
         // Required empty constructor for Firebase
     }
 
-    public ChatMessage(String username, String message, long timestamp) {
+    public ChatMessageModel(String username, String message, long timestamp) {
         this.username = username;
         this.message = message;
         this.timestamp = timestamp;
