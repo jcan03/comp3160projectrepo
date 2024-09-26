@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
 
     private EditText messageField;
-    private Button sendButton;
+    private ImageButton sendButton;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private List<ChatMessageModel> chatMessages;
