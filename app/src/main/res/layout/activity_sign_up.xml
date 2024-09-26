@@ -8,25 +8,28 @@
     <EditText
         android:id="@+id/emailField"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email" />
+        android:layout_height="50dp"
+        android:hint="Email"
+        android:background="@drawable/edit_text_styling"/>
 
     <EditText
         android:id="@+id/passwordField"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:background="@drawable/edit_text_styling"/>
 
     <EditText
         android:id="@+id/usernameField"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Username" />
+        android:layout_height="50dp"
+        android:hint="Username"
+        android:background="@drawable/edit_text_styling"/>
 
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Sign Up" />
 </LinearLayout>
