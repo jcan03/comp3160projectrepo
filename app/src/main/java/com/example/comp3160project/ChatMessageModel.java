@@ -1,20 +1,24 @@
 package com.example.comp3160project;
 
 public class ChatMessageModel {
+
+    // variables for chat model
     private String username;
     private String message;
     private long timestamp;
 
+    // required empty constructor for firebase
     public ChatMessageModel() {
-        // Required empty constructor for Firebase
     }
 
+    // parameterized constructor
     public ChatMessageModel(String username, String message, long timestamp) {
         this.username = username;
         this.message = message;
         this.timestamp = timestamp;
     }
 
+    // getters and setters for each variable
     public String getUsername() {
         return username;
     }

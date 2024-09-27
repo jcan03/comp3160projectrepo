@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    // create variables
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
 
@@ -22,35 +23,67 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initialize firebase variables
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
 
+        // send user to login activity if there is not anyone logged in
         if (currentUser == null) {
-            // Redirect to LoginActivity if the user is not authenticated
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
+        // set variables to their layout ids
         forYouButton = findViewById(R.id.forYouButton);
         favouritesButton = findViewById(R.id.favouritesButton);
         searchButton = findViewById(R.id.searchButton);
         settingsButton = findViewById(R.id.settingsButton);
         chatButton = findViewById(R.id.chatButton);
 
-        // Load ChatFragment initially
+        // load the chat fragment initially
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ChatFragment())
                 .commit();
 
-        // Set up button listeners
-        chatButton.setOnClickListener(v -> loadFragment(new ChatFragment()));
-        forYouButton.setOnClickListener(v -> loadFragment(new ForYouFragment()));
-        favouritesButton.setOnClickListener(v -> loadFragment(new FavouritesFragment()));
-        searchButton.setOnClickListener(v -> loadFragment(new SearchFragment()));
-        settingsButton.setOnClickListener(v -> loadFragment(new SettingsFragment()));
+        // set up button listeners for each fragment
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new ChatFragment());
+            }
+        });
+
+        forYouButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new ForYouFragment());
+            }
+        });
+
+        favouritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new FavouritesFragment());
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new SearchFragment());
+            }
+        });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new SettingsFragment());
+            }
+        });
     }
 
+    // method to load the fragments, replacing the layout in the fragment container
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
