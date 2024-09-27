@@ -4,71 +4,51 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-
-        <EditText
-            android:id="@+id/messageField"
-            android:layout_width="175dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/edit_text_styling"
-            android:hint="Type a message" />
-
-        <ImageButton
-            android:id="@+id/sendButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/send_message_icon" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp" />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="5dp">
+        android:layout_margin="10dp">
+
+        <ImageButton
+            android:id="@+id/chatButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="Chat"
+            android:src="@drawable/chat_icon" />
 
         <ImageButton
             android:id="@+id/forYouButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:contentDescription="For You"
-            android:src="@drawable/for_you_icon">
-        </ImageButton>
+            android:src="@drawable/for_you_icon" />
 
         <ImageButton
             android:id="@+id/favouritesButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:contentDescription="Favourites"
-            android:src="@drawable/favourites_icon">
-    </ImageButton>
+            android:src="@drawable/favourites_icon" />
 
         <ImageButton
             android:id="@+id/searchButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="Favourites"
-            android:src="@drawable/search_icon">
-        </ImageButton>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="Search"
+            android:src="@drawable/search_icon" />
 
         <ImageButton
             android:id="@+id/settingsButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="Favourites"
-            android:src="@drawable/settings_icon">
-        </ImageButton>
-
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="Settings"
+            android:src="@drawable/settings_icon" />
     </LinearLayout>
 </LinearLayout>
