@@ -33,6 +33,9 @@ android {
 }
 
 dependencies {
+    val fragment_version = "1.8.3"
+
+    implementation("androidx.fragment:fragment:$fragment_version")
 
     implementation(libs.appcompat)
     implementation(libs.material)
