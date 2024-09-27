@@ -32,39 +32,39 @@ public class ChatFragment extends Fragment {
     private List<ChatMessageModel> chatMessages;
     private Context context;
 
+    // required empty constructor
     public ChatFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Firebase references
+        // initialize firebase references
         FirebaseAuth auth = FirebaseAuth.getInstance();
         userRef = FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid());
         messageRef = FirebaseDatabase.getInstance().getReference("Messages");
 
-        // Initialize message list and adapter
+        // initialize list of messages and adapter
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(chatMessages);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // set the layout and container to the view
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        // Initialize views
+        // initialize layout views
         chatRecyclerView = view.findViewById(R.id.chatRecyclerView);
         messageField = view.findViewById(R.id.messageField);
         sendButton = view.findViewById(R.id.sendButton);
 
-        // Set up RecyclerView with LayoutManager and adapter
+        // set up recyclerview with layoutmanager and adapter
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatRecyclerView.setAdapter(chatAdapter);
 
-        // Set up Firebase message listener
+        // set up firebase message listener
         if (messageRef != null) {
             messageRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -87,7 +87,7 @@ public class ChatFragment extends Fragment {
             });
         }
 
-        // Send button logic
+        // send button on click listener
         sendButton.setOnClickListener(v -> {
             String message = messageField.getText().toString().trim();
             if (TextUtils.isEmpty(message)) {
@@ -118,14 +118,15 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
+    // method to handle sending a message to firebase
     private void sendMessage(String username, String message) {
         long timestamp = System.currentTimeMillis();
         ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp);
 
-        // Push message to Firebase
+        // push message to Firebase
         messageRef.push().setValue(chatMessage).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                messageField.setText("");  // Clear the input field after sending the message
+                messageField.setText("");  // clears the send message edit text after sending the message
             } else {
                 Toast.makeText(getContext(), "Failed to send message", Toast.LENGTH_SHORT).show();
             }
