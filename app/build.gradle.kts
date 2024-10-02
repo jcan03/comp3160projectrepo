@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.gridlayout)
     val fragment_version = "1.8.3"
 
     implementation("androidx.fragment:fragment:$fragment_version")
