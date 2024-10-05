@@ -37,6 +37,12 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;  // Set context when fragment is attached
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -61,7 +67,7 @@ public class ChatFragment extends Fragment {
         sendButton = view.findViewById(R.id.sendButton);
 
         // set up recyclerview with layoutmanager and adapter
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        chatRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         chatRecyclerView.setAdapter(chatAdapter);
 
         // set up firebase message listener
@@ -82,7 +88,9 @@ public class ChatFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getContext(), "Error loading messages: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (context != null) {  // Ensure context is valid
+                        Toast.makeText(context, "Error loading messages: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -91,7 +99,9 @@ public class ChatFragment extends Fragment {
         sendButton.setOnClickListener(v -> {
             String message = messageField.getText().toString().trim();
             if (TextUtils.isEmpty(message)) {
-                Toast.makeText(getContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                if (context != null) {
+                    Toast.makeText(context, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
 
@@ -103,13 +113,17 @@ public class ChatFragment extends Fragment {
                         if (username != null) {
                             sendMessage(username, message);
                         } else {
-                            Toast.makeText(getContext(), "Unable to fetch username", Toast.LENGTH_SHORT).show();
+                            if (context != null) {
+                                Toast.makeText(context, "Unable to fetch username", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(getContext(), "Error fetching username", Toast.LENGTH_SHORT).show();
+                        if (context != null) {
+                            Toast.makeText(context, "Error fetching username", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -128,8 +142,16 @@ public class ChatFragment extends Fragment {
             if (task.isSuccessful()) {
                 messageField.setText("");  // clears the send message edit text after sending the message
             } else {
-                Toast.makeText(getContext(), "Failed to send message", Toast.LENGTH_SHORT).show();
+                if (context != null) {
+                    Toast.makeText(context, "Failed to send message", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        context = null;  // clear context when fragment is detached from fragment manager
     }
 }
