@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsFragment">
+    tools:context=".SettingsFragment"
+    android:padding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,8 +37,8 @@
 
         <Button
             android:id="@+id/deleteAccountButton"
-            android:layout_width="375dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
             android:text="Delete Account"
             android:backgroundTint="@color/blue"
             android:layout_marginTop="20dp"
@@ -47,8 +48,8 @@
 
         <Button
             android:id="@+id/logOutButton"
-            android:layout_width="375dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
             android:text="Log Out"
             android:backgroundTint="@color/blue"
             android:layout_marginTop="20dp"

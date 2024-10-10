@@ -25,15 +25,15 @@
             <EditText
                 android:id="@+id/messageField"
                 android:layout_width="375dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:hint="Type a message"
                 android:background="@drawable/edit_text_styling"/>
 
             <ImageButton
                 android:id="@+id/sendButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/send_message_icon"
                 android:contentDescription="Send message" />
         </LinearLayout>
