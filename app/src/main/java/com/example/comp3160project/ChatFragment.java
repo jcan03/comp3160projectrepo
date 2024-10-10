@@ -83,7 +83,11 @@ public class ChatFragment extends Fragment {
                         }
                     }
                     chatAdapter.notifyDataSetChanged();
-                    chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+
+                    // only scroll to most recent messages if message exists (avoid null pointer crash if there are no messages)
+                    if (chatMessages.size() != 0) {
+                        chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                    }
                 }
 
                 @Override
@@ -109,16 +113,18 @@ public class ChatFragment extends Fragment {
                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String username = dataSnapshot.getValue(String.class);
-                        if (username != null) {
-                            sendMessage(username, message);
+                        // variable to retrieve username from model class
+                        UserModel user = dataSnapshot.getValue(UserModel.class);
+
+                        if (user != null) {
+                            String username = user.getUsername();
+                            sendMessage(username, message);  // we only want to take the username from the user model for messages
                         } else {
                             if (context != null) {
                                 Toast.makeText(context, "Unable to fetch username", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         if (context != null) {
