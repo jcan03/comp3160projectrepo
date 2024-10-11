@@ -30,6 +30,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         ChatMessageModel message = chatMessages.get(position);
         holder.usernameTextView.setText(message.getUsername());
         holder.messageTextView.setText(message.getMessage());
+        holder.timeSentTextView.setText(message.getFormattedTimestamp());
     }
 
     @Override
@@ -38,12 +39,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
-        TextView usernameTextView, messageTextView;
+        TextView usernameTextView, messageTextView, timeSentTextView;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
+            timeSentTextView = itemView.findViewById(R.id.timeSentTextView);
         }
     }
 }
