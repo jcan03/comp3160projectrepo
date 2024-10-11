@@ -68,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = auth.getCurrentUser();
                                 if (user != null) {
-                                    // save username to Firebase Realtime Database under "Users" node
+                                    // save username and email to Firebase Realtime Database under "Users" node
                                     UserModel userModel = new UserModel(username, email);
 
                                     String userId = user.getUid();
@@ -80,8 +80,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                     finish();
                                 }
-                            } else {
-                                Toast.makeText(SignUpActivity.this,  "You must enter a valid Email and a Password with 6+ characters to register", Toast.LENGTH_LONG).show();
+                            } else { // if the email is not valid, has already registered, or the password length is too small, send toast
+                                Toast.makeText(SignUpActivity.this,  "You must enter a valid Email that has not already signed up and a Password with 6+ characters to register", Toast.LENGTH_LONG).show();
                             }
                         });
             }
