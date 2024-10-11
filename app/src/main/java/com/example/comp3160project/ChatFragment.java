@@ -24,6 +24,7 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
 
+    private FirebaseAuth auth;
     private DatabaseReference messageRef, userRef;
     private EditText messageField;
     private ImageButton sendButton;
@@ -47,7 +48,7 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // initialize firebase references
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         userRef = FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid());
         messageRef = FirebaseDatabase.getInstance().getReference("Messages");
 
@@ -118,7 +119,7 @@ public class ChatFragment extends Fragment {
 
                         if (user != null) {
                             String username = user.getUsername();
-                            sendMessage(username, message);  // we only want to take the username from the user model for messages
+                            sendMessage(username, message, auth.getCurrentUser().getEmail());  // we only want to take the username from the user model for messages
                         } else {
                             if (context != null) {
                                 Toast.makeText(context, "Unable to fetch username", Toast.LENGTH_SHORT).show();
@@ -139,9 +140,9 @@ public class ChatFragment extends Fragment {
     }
 
     // method to handle sending a message to firebase
-    private void sendMessage(String username, String message) {
+    private void sendMessage(String username, String message, String email) {
         long timestamp = System.currentTimeMillis();
-        ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp);
+        ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp, email);
 
         // push message to Firebase
         messageRef.push().setValue(chatMessage).addOnCompleteListener(task -> {
