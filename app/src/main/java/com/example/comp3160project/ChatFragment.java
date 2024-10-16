@@ -24,6 +24,7 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
 
+    private FirebaseAuth auth;
     private DatabaseReference messageRef, userRef;
     private EditText messageField;
     private ImageButton sendButton;
@@ -37,11 +38,17 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;  // Set context when fragment is attached
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // initialize firebase references
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         userRef = FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid());
         messageRef = FirebaseDatabase.getInstance().getReference("Messages");
 
@@ -61,7 +68,7 @@ public class ChatFragment extends Fragment {
         sendButton = view.findViewById(R.id.sendButton);
 
         // set up recyclerview with layoutmanager and adapter
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        chatRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         chatRecyclerView.setAdapter(chatAdapter);
 
         // set up firebase message listener
@@ -77,12 +84,18 @@ public class ChatFragment extends Fragment {
                         }
                     }
                     chatAdapter.notifyDataSetChanged();
-                    chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+
+                    // only scroll to most recent messages if message exists (avoid null pointer crash if there are no messages)
+                    if (chatMessages.size() != 0) {
+                        chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                    }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getContext(), "Error loading messages: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (context != null) {  // Ensure context is valid
+                        Toast.makeText(context, "Error loading messages: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -91,7 +104,9 @@ public class ChatFragment extends Fragment {
         sendButton.setOnClickListener(v -> {
             String message = messageField.getText().toString().trim();
             if (TextUtils.isEmpty(message)) {
-                Toast.makeText(getContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                if (context != null) {
+                    Toast.makeText(context, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
 
@@ -99,17 +114,23 @@ public class ChatFragment extends Fragment {
                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String username = dataSnapshot.getValue(String.class);
-                        if (username != null) {
-                            sendMessage(username, message);
+                        // variable to retrieve username from model class
+                        UserModel user = dataSnapshot.getValue(UserModel.class);
+
+                        if (user != null) {
+                            String username = user.getUsername();
+                            sendMessage(username, message, auth.getCurrentUser().getEmail());  // we only want to take the username from the user model for messages
                         } else {
-                            Toast.makeText(getContext(), "Unable to fetch username", Toast.LENGTH_SHORT).show();
+                            if (context != null) {
+                                Toast.makeText(context, "Unable to fetch username", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(getContext(), "Error fetching username", Toast.LENGTH_SHORT).show();
+                        if (context != null) {
+                            Toast.makeText(context, "Error fetching username", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -119,17 +140,25 @@ public class ChatFragment extends Fragment {
     }
 
     // method to handle sending a message to firebase
-    private void sendMessage(String username, String message) {
+    private void sendMessage(String username, String message, String email) {
         long timestamp = System.currentTimeMillis();
-        ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp);
+        ChatMessageModel chatMessage = new ChatMessageModel(username, message, timestamp, email);
 
         // push message to Firebase
         messageRef.push().setValue(chatMessage).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 messageField.setText("");  // clears the send message edit text after sending the message
             } else {
-                Toast.makeText(getContext(), "Failed to send message", Toast.LENGTH_SHORT).show();
+                if (context != null) {
+                    Toast.makeText(context, "Failed to send message", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        context = null;  // clear context when fragment is detached from fragment manager
     }
 }

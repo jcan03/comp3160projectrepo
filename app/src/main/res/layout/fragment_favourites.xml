@@ -19,7 +19,11 @@
             android:text="Favourites"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:textStyle="bold" />
+
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/blue"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favouritesRecyclerView"
