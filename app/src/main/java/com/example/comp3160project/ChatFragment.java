@@ -120,10 +120,10 @@ public class ChatFragment extends Fragment {
                         if (user != null) {
                             String username = user.getUsername();
                             sendMessage(username, message, auth.getCurrentUser().getEmail());  // we only want to take the username from the user model for messages
-                        } else {
-                            if (context != null) {
-                                Toast.makeText(context, "Unable to fetch username", Toast.LENGTH_SHORT).show();
-                            }
+                        }
+                        else // use anonymous username if user is null for some reason while in chat fragment (ran into this issue)
+                        {
+                            sendMessage("Anonymous", message, auth.getCurrentUser().getEmail());
                         }
                     }
                     @Override
