@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +42,12 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         holder.name.setText(restaurant.getName());
         holder.street.setText(restaurant.getStreet());
         holder.distance.setText(String.valueOf(restaurant.getDistance()));
+
+        //Restaurant ClickListener
+        holder.name.setOnClickListener(view -> {//TODO: Make this use the full item rather than just the title
+            Toast.makeText(context, "Resturaunt", Toast.LENGTH_SHORT).show(); //TODO: Make this change pages
+
+        });
     }
 
     @Override
