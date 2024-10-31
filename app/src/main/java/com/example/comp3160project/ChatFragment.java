@@ -101,38 +101,41 @@ public class ChatFragment extends Fragment {
         }
 
         // send button on click listener
-        sendButton.setOnClickListener(v -> {
-            String message = messageField.getText().toString().trim();
-            if (TextUtils.isEmpty(message)) {
-                if (context != null) {
-                    Toast.makeText(context, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String message = messageField.getText().toString().trim();
+                if (TextUtils.isEmpty(message)) {
+                    if (context != null) {
+                        Toast.makeText(context, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                    return;
                 }
-                return;
-            }
 
-            if (userRef != null) {
-                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // variable to retrieve username from model class
-                        UserModel user = dataSnapshot.getValue(UserModel.class);
+                if (userRef != null) {
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // variable to retrieve username from model class
+                            UserModel user = dataSnapshot.getValue(UserModel.class);
 
-                        if (user != null) {
-                            String username = user.getUsername();
-                            sendMessage(username, message, auth.getCurrentUser().getEmail());  // we only want to take the username from the user model for messages
+                            if (user != null) {
+                                String username = user.getUsername();
+                                sendMessage(username, message, auth.getCurrentUser().getEmail());  // we only want to take the username from the user model for messages
+                            }
+                            else // use anonymous username if user is null for some reason while in chat fragment
+                            {
+                                sendMessage("Anonymous", message, auth.getCurrentUser().getEmail());
+                            }
                         }
-                        else // use anonymous username if user is null for some reason while in chat fragment (ran into this issue)
-                        {
-                            sendMessage("Anonymous", message, auth.getCurrentUser().getEmail());
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            if (context != null) {
+                                Toast.makeText(context, "Error getting username", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (context != null) {
-                            Toast.makeText(context, "Error fetching username", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
             }
         });
 

@@ -7,6 +7,10 @@ public class Restaurant {
     int distance;
     double rating;
 
+    public Restaurant() {
+
+    }
+
     public Restaurant(String imageUrl, String name, String street, int distance, double rating) {
         this.imageUrl = imageUrl;
         this.name = name;
