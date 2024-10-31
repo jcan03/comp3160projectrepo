@@ -70,7 +70,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (currentUser != null) {
-                    // Show confirmation dialog before deleting the account
+                    // pop up confirmation dialog before deleting the account
                     new AlertDialog.Builder(context)
                             .setTitle("Delete Account")
                             .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
                             .setNegativeButton("No", null)
                             .show();
                 } else {
-                    showToast("No user is logged in");
+                    Toast.makeText(context,"No user is logged in", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -97,25 +97,36 @@ public class SettingsFragment extends Fragment {
     // method to delete account and all associated user data (messages)
     private void deleteAccount() {
         if (currentUser != null && currentUser.getEmail() != null) {
-            deleteMessagesByUserEmail(currentUser.getEmail(), () -> {
-                // After deleting messages, delete user data and account
+            String emailToDelete = currentUser.getEmail();
+            deleteMessagesByUserEmail(emailToDelete, () -> {
+                // after deleting messages, delete account from firebase
                 userRef.removeValue().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        currentUser.delete().addOnCompleteListener(deleteTask -> {
-                            if (deleteTask.isSuccessful()) {
-                                showToast("Account deleted successfully");
+                        currentUser.delete().addOnCompleteListener(deleteTask ->
+                        {
+                            // if successful, send user back to login page using method
+                            if (deleteTask.isSuccessful())
+                            {
+                                Toast.makeText(context,"Account deleted successfully", Toast.LENGTH_LONG).show();
                                 redirectToLogin();
-                            } else {
+                            }
+                            else
+                            {
+                                // case where user may need to login again prior to deleting account due to firebase rules on certain operations
                                 reAuthenticateAndDelete();
                             }
                         });
-                    } else {
-                        showToast("Failed to delete user data");
+                    }
+                    else
+                    {   // if there is an issue deleting the user account that is not related to re-logging in, provide message
+                        Toast.makeText(context,"Failed to delete user messages and account", Toast.LENGTH_LONG).show();
                     }
                 });
             });
-        } else {
-            showToast("No user is logged in");
+        }
+        else
+        { // if somehow no user is logged in, provide toast
+           Toast.makeText(context,"No user is logged in", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -134,7 +145,7 @@ public class SettingsFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // handle database error if needed
+               Toast.makeText(context, "There was an issue deleting user messages", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -156,19 +167,14 @@ public class SettingsFragment extends Fragment {
     private void logOut() {
         if (currentUser != null) {
             FirebaseAuth.getInstance().signOut();
-            showToast("User logged out successfully");
+            Toast.makeText(context,"User logged out successfully", Toast.LENGTH_LONG).show();
             redirectToLogin();
         } else {
-            showToast("No user is logged in");
+            Toast.makeText(context,"No user is logged in", Toast.LENGTH_LONG).show();
         }
     }
 
-    // utility method to show a toast
-    private void showToast(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
-
-    // utility method to redirect to login
+    // method to redirect to login after login, deletion, or re authentication is required
     private void redirectToLogin() {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -178,6 +184,6 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        context = null;  // Clear context when fragment is detached
+        context = null;  // clear context when fragment is detached
     }
 }

@@ -38,6 +38,7 @@ dependencies {
 
     implementation("androidx.fragment:fragment:$fragment_version")
 
+    implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
