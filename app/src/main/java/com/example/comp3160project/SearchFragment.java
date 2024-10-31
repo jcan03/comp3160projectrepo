@@ -1,15 +1,24 @@
 package com.example.comp3160project;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +34,8 @@ public class SearchFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private DatabaseReference mDatabase;
+// ...
 
     private RecyclerView searchRecyclerView;
     private SearchView restaurantSearch;
@@ -66,35 +77,35 @@ public class SearchFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+
+                    if (restaurants != null) {
+                        restaurants.add(restaurant);
+                    }
+                }
+                searchAdapter.notifyDataSetChanged();
+                // ..
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.child("restaurants").addValueEventListener(postListener);
+
 
         restaurants = new ArrayList<>();
         //TODO: make this actually pull stuff from firebase
-        restaurants.add(new Restaurant("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa3pIdeo1ItkpL03CbhvRB8I5E2SlFGdrDoA&s",
-                "Kochi Bao",
-                "In your area",
-                50,
-                4.5
-                ));
-        restaurants.add(new Restaurant("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa3pIdeo1ItkpL03CbhvRB8I5E2SlFGdrDoA&s",
-                "Tiger Ramen",
-                "Seymour on the Street",
-                50,
-                4.8
-        ));
 
-        restaurants.add(new Restaurant("https://lixil.cdn.celum.cloud/71295_B-2794204020_CDNwebp.webp",
-                "Toilet",
-                "Old main",
-                50,
-                4.5
-        ));
-
-        restaurants.add(new Restaurant("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa3pIdeo1ItkpL03CbhvRB8I5E2SlFGdrDoA&s",
-                "Awesome food",
-                "gave me cancer tho :(",
-                50,
-                6.0
-        ));
 
         searchAdapter = new SearchAdapter(getContext(), restaurants);
     }
@@ -129,8 +140,14 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
+
         return view;
     }
-
-
+    public void writeNewRestaurant(Restaurant restaurant)
+    {
+        mDatabase.child("restaurants").push().setValue(restaurant);
+    }
 }
+
+

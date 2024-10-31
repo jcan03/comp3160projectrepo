@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> implements Filterable {
+
+    public interface OnRestaurantClickListener {
+        void onRestaurantClick(Restaurant restaurant);
+    }
+
+    private OnRestaurantClickListener listener;
+
+    public SearchAdapter(Context context, List<Restaurant> restaurants, OnRestaurantClickListener listener) {
+        this.restaurants = restaurants;
+        this.listener = listener;
+    }
 
     private Context context;
     private List<Restaurant> restaurants;
@@ -41,6 +53,18 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         holder.name.setText(restaurant.getName());
         holder.street.setText(restaurant.getStreet());
         holder.distance.setText(String.valueOf(restaurant.getDistance()));
+
+        //Restaurant ClickListener
+        holder.name.setOnClickListener(view -> {//TODO: Make this use the full item rather than just the title
+
+            MainActivity mainActivity = (MainActivity) context;
+
+            //Create the fragment and pass the parameters to it.
+            ResturauntInfoFragment frag = new ResturauntInfoFragment().newInstance(restaurant.getName(), restaurant.getStreet(), restaurant.getDistance());
+            mainActivity.loadFragment(frag); // or whatever fragment you need
+
+            Toast.makeText(context, "Restaurant", Toast.LENGTH_SHORT).show(); //TODO: Make this change pages
+        });
     }
 
     @Override
