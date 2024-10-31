@@ -19,6 +19,17 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> implements Filterable {
 
+    public interface OnRestaurantClickListener {
+        void onRestaurantClick(Restaurant restaurant);
+    }
+
+    private OnRestaurantClickListener listener;
+
+    public SearchAdapter(Context context, List<Restaurant> restaurants, OnRestaurantClickListener listener) {
+        this.restaurants = restaurants;
+        this.listener = listener;
+    }
+
     private Context context;
     private List<Restaurant> restaurants;
     private List<Restaurant> restaurantsFull; // List for holding the original data
@@ -45,8 +56,14 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
 
         //Restaurant ClickListener
         holder.name.setOnClickListener(view -> {//TODO: Make this use the full item rather than just the title
-            Toast.makeText(context, "Resturaunt", Toast.LENGTH_SHORT).show(); //TODO: Make this change pages
 
+            MainActivity mainActivity = (MainActivity) context;
+
+            //Create the fragment and pass the parameters to it.
+            ResturauntInfoFragment frag = new ResturauntInfoFragment().newInstance(restaurant.getName(), restaurant.getStreet(), restaurant.getDistance());
+            mainActivity.loadFragment(frag); // or whatever fragment you need
+
+            Toast.makeText(context, "Restaurant", Toast.LENGTH_SHORT).show(); //TODO: Make this change pages
         });
     }
 

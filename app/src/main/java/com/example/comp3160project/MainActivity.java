@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // method to load the fragments, replacing the layout in the fragment container
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
