@@ -1,17 +1,31 @@
 package com.example.comp3160project;
 
+import static android.app.Activity.RESULT_OK;
+import static android.provider.Settings.ACTION_BLUETOOTH_SETTINGS;
+import static android.provider.Settings.ACTION_SETTINGS;
+
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatFragment extends Fragment {
 
@@ -28,6 +43,7 @@ public class ChatFragment extends Fragment {
     private DatabaseReference messageRef, userRef;
     private EditText messageField;
     private ImageButton sendButton;
+    private ImageView micImage;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private List<ChatMessageModel> chatMessages;
@@ -66,6 +82,7 @@ public class ChatFragment extends Fragment {
         chatRecyclerView = view.findViewById(R.id.chatRecyclerView);
         messageField = view.findViewById(R.id.messageField);
         sendButton = view.findViewById(R.id.sendButton);
+        micImage = view.findViewById(R.id.microphoneIconChatFrag);
 
         // set up recyclerview with layoutmanager and adapter
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -139,6 +156,13 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        micImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSpeechRecognition();
+            }
+        });
+
         return view;
     }
 
@@ -158,6 +182,42 @@ public class ChatFragment extends Fragment {
             }
         });
     }
+
+    private void startSpeechRecognition() {
+        // Create an Intent for speech recognition
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+        try {
+            // Launch the speech recognition activity
+            speechRecognitionLauncher.launch(intent);
+        } catch (ActivityNotFoundException e) {
+            // Handle the case where speech recognition is not supported
+            Toast.makeText(getContext(), "Speech recognition not supported on this device.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private final ActivityResultLauncher<Intent> speechRecognitionLauncher = registerForActivityResult(
+            // Create a new instance of ActivityResultContracts.StartActivityForResult
+            new ActivityResultContracts.StartActivityForResult(),
+            // Define an anonymous inner class implementing ActivityResultCallback<ActivityResult>
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    // Check if the result code indicates success and data is not null
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        // Retrieve the recognized speech results as an ArrayList of strings
+                        ArrayList<String> resultData = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                        if (resultData != null && !resultData.isEmpty()) {
+                            // Display the recognized text in a TextView
+                            messageField.setText(resultData.get(0));
+                        }
+                    }
+                }
+            }
+    );
 
     @Override
     public void onDetach() {

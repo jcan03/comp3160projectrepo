@@ -33,7 +33,7 @@ public class ForYouFragment extends Fragment {
         forYouRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize Adapter
-        restaurantAdapter = new RestaurantAdapter(restaurantList);
+        restaurantAdapter = new RestaurantAdapter(getContext(), restaurantList);
         forYouRecyclerView.setAdapter(restaurantAdapter);
 
         // call method to randomly select restaurants to show in recycler view

@@ -8,13 +8,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
     private List<ChatMessageModel> chatMessages;
 
-    public ChatAdapter(List<ChatMessageModel> chatMessages) {
+    public ChatAdapter(List<ChatMessageModel> chatMessages)
+    {
         this.chatMessages = chatMessages;
     }
 
