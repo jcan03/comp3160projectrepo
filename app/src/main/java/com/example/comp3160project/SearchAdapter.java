@@ -1,6 +1,7 @@
 package com.example.comp3160project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.comp3160project.R;
-import com.example.comp3160project.Restaurant;
-import com.example.comp3160project.RestaurantViewHolder;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
     @NonNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_search_resturaunt_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.resturaunt_item, parent, false);
         return new RestaurantViewHolder(view);
     }
 
@@ -53,6 +52,29 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         holder.name.setText(restaurant.getName());
         holder.street.setText(restaurant.getStreet());
         holder.distance.setText(String.valueOf(restaurant.getDistance()));
+        holder.rating.setText("★"+ String.valueOf(restaurant.getRating()) + "/5");
+
+        // button on each restaurant item which opens an intent with restaurant information to share
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String shareText = "Check out this restaurant I found on Kamloops Restaurant Finder app!\n" +
+                        "Name: " + restaurant.getName() + "\n" +
+                        "Street: " + restaurant.getStreet() + "\n" +
+                        "Rating: " + restaurant.getRating();
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                holder.itemView.getContext().startActivity(Intent.createChooser(shareIntent, "Share restaurant info via"));
+
+            }
+        });
+
+        Glide.with(holder.itemView.getContext())
+                .load(restaurant.getImageUrl())
+                .into(holder.restaurantImg);
 
         //Restaurant ClickListener
         holder.name.setOnClickListener(view -> {//TODO: Make this use the full item rather than just the title

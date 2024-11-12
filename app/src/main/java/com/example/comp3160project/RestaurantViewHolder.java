@@ -22,5 +22,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         distance = itemView.findViewById(R.id.distance);
         rating = itemView.findViewById(R.id.rating);
         shareButton = itemView.findViewById(R.id.shareButton);
+
     }
 }

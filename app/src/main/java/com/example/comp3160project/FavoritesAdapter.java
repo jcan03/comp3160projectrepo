@@ -1,7 +1,6 @@
 package com.example.comp3160project;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
     @NonNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_search_resturaunt_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.resturaunt_item, parent, false);
         return new RestaurantViewHolder(view);
     }
 
