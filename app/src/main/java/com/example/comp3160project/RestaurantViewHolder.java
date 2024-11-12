@@ -2,6 +2,7 @@ package com.example.comp3160project;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +13,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView restaurantImg;
     public TextView name, street, distance, rating;
-    public Button shareButton;
+    public ImageButton shareButton, favouriteButton;
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -22,6 +23,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         distance = itemView.findViewById(R.id.distance);
         rating = itemView.findViewById(R.id.rating);
         shareButton = itemView.findViewById(R.id.shareButton);
-
+        favouriteButton = itemView.findViewById(R.id.favouriteRestaurantButton);
     }
 }

@@ -156,9 +156,7 @@ public class SettingsFragment extends Fragment {
                 .setTitle("Re-authentication Required")
                 .setMessage("Please log in again to complete account deletion.")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    redirectToLogin();
                 })
                 .show();
     }
