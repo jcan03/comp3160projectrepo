@@ -20,7 +20,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         restaurantImg = itemView.findViewById(R.id.restaurantImage);
         name = itemView.findViewById(R.id.name);
         street = itemView.findViewById(R.id.street);
-        distance = itemView.findViewById(R.id.distance);
         rating = itemView.findViewById(R.id.rating);
         shareButton = itemView.findViewById(R.id.shareButton);
         favouriteButton = itemView.findViewById(R.id.favouriteRestaurantButton);

@@ -64,7 +64,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         Restaurant restaurant = restaurants.get(position);
         holder.name.setText(restaurant.getName());
         holder.street.setText(restaurant.getStreet());
-        holder.distance.setText(String.valueOf(restaurant.getDistance()));
+        holder.rating.setText(restaurant.getRating() + "★");
 
         //Restaurant ClickListener
         holder.name.setOnClickListener(view -> {//TODO: Make this use the full item rather than just the title

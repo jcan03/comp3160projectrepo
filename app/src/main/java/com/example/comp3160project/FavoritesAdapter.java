@@ -47,8 +47,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
         // set the values for each view in the ViewHolder
         holder.name.setText(restaurant.getName());
         holder.street.setText(restaurant.getStreet());
-        holder.distance.setText(restaurant.getDistance());
-        holder.rating.setText(String.valueOf(restaurant.getRating()));
+        holder.rating.setText(restaurant.getRating() + "★");
 
         // load the image using glide library
         Glide.with(holder.itemView.getContext())
