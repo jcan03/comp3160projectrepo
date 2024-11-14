@@ -43,11 +43,13 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
     private List<Restaurant> restaurantsFull; // List for holding the original data
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private boolean searched = false;
 
     public SearchAdapter(Context context, List<Restaurant> restaurants) {
         this.context = context;
         this.restaurants = restaurants;
-        this.restaurantsFull = new ArrayList<>(restaurants); // Copy of the original list
+         // Copy of the original list
+        this.restaurantsFull = restaurants;
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
@@ -142,6 +144,11 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Restaurant> filteredList = new ArrayList<>();
+                if (!searched) //Wait till the user starts searching to finalize data
+                {
+                    restaurantsFull = new ArrayList<>(restaurants);
+                    searched = true;
+                }
                 if (constraint == null || constraint.length() == 0) {
                     filteredList.addAll(restaurantsFull);
                 } else {
