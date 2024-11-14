@@ -32,7 +32,7 @@ public class FavouritesFragment extends Fragment {
     private DatabaseReference mDatabase;
 
     public FavouritesFragment() {
-        // Required empty public constructor
+        // required empty public constructor
     }
 
     @Override
@@ -41,7 +41,7 @@ public class FavouritesFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Fetch favorites for the current user
+        // fetch favorites for the current user
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoritesRef = mDatabase.child("UserFavourites").child(userId).child("favourites");
 

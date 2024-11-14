@@ -42,6 +42,7 @@ public class ForYouFragment extends Fragment {
         return view;
     }
 
+    // method to randomly pick 4 restaurants to display on the for you page recycler view
     private void loadRandomRestaurants() {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("restaurants");
 
@@ -56,9 +57,9 @@ public class ForYouFragment extends Fragment {
                     allRestaurants.add(restaurant);
                 }
 
-                // shuffle the restaurants and randomly display 5 restaurants in the recycler view
+                // shuffle the restaurants and randomly display 4 restaurants in the recycler view
                 Collections.shuffle(allRestaurants);
-                List<Restaurant> randomRestaurants = allRestaurants.subList(0, Math.min(5, allRestaurants.size()));
+                List<Restaurant> randomRestaurants = allRestaurants.subList(0, Math.min(4, allRestaurants.size()));
 
                 // clear current list and update RecyclerView
                 restaurantList.clear();
@@ -66,6 +67,7 @@ public class ForYouFragment extends Fragment {
                 restaurantAdapter.notifyDataSetChanged();
             }
 
+            // override oncancelled to provide toast if there is an issue
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getContext(), "There was an error retrieving the For You page information", Toast.LENGTH_LONG).show();

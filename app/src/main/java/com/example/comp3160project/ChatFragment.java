@@ -56,7 +56,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;  // Set context when fragment is attached
+        this.context = context;  // set context when the fragment is attached
     }
 
     @Override
@@ -145,6 +145,7 @@ public class ChatFragment extends Fragment {
                                 sendMessage("Anonymous", message, auth.getCurrentUser().getEmail());
                             }
                         }
+                        // provide error message if there is a database error
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             if (context != null) {
@@ -156,6 +157,7 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        // on click of mic image, call start speech recognition method for speech to text
         micImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,35 +185,40 @@ public class ChatFragment extends Fragment {
         });
     }
 
+    // method to allow speech to text functionality to work
     private void startSpeechRecognition() {
-        // Create an Intent for speech recognition
+        // create an intent for speech recognition
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
 
-        try {
-            // Launch the speech recognition activity
+        try
+        {
+            // launch the speech recognition activity
             speechRecognitionLauncher.launch(intent);
-        } catch (ActivityNotFoundException e) {
-            // Handle the case where speech recognition is not supported
+        }
+        catch (ActivityNotFoundException e)
+        {
+            // handle the case where speech recognition is not supported
             Toast.makeText(getContext(), "Speech recognition not supported on this device.", Toast.LENGTH_SHORT).show();
         }
     }
 
+    // launches the activity pop up box for speech to text to work
     private final ActivityResultLauncher<Intent> speechRecognitionLauncher = registerForActivityResult(
-            // Create a new instance of ActivityResultContracts.StartActivityForResult
+            // create a new instance of ActivityResultContracts.StartActivityForResult
             new ActivityResultContracts.StartActivityForResult(),
-            // Define an anonymous inner class implementing ActivityResultCallback<ActivityResult>
+            // define an anonymous inner class implementing ActivityResultCallback<ActivityResult>
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    // Check if the result code indicates success and data is not null
+                    // check if the result code indicates success and data is not null
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        // Retrieve the recognized speech results as an ArrayList of strings
+                        // retrieve the recognized speech results as an ArrayList of strings
                         ArrayList<String> resultData = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                         if (resultData != null && !resultData.isEmpty()) {
-                            // Display the recognized text in a TextView
+                            // display the recognized text in a TextView
                             messageField.setText(resultData.get(0));
                         }
                     }

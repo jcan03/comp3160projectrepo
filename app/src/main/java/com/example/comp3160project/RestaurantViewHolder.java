@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView restaurantImg;
-    public TextView name, street, distance, rating;
+    public TextView name, street, rating;
     public ImageButton shareButton, favouriteButton;
 
     public RestaurantViewHolder(@NonNull View itemView) {

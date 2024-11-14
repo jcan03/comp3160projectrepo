@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +55,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
                 .load(restaurant.getImageUrl())
                 .into(holder.restaurantImg);
 
+        // on click of favourite image, call toggleFavorite method
         holder.favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +80,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
             }
         });
     }
+
+    // method which handles toggling and untoggling a favourite restaurant, adds to firebase if favourited, removes from firebase if not, all favourites then display in recycler view in the favourites fragment
     private void toggleFavorite(Restaurant restaurant) {
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
@@ -85,22 +89,27 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
         favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // If the restaurant is already a favorite, remove it
+                if (dataSnapshot.exists())
+                {
+                    // if the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
-                } else {
-                    // If it's not a favorite, add it
+                }
+                else
+                {
+                    // if the restaurant is not a favorite, add it
                     favoriteRef.setValue(true);
                 }
             }
 
+            // provide error message if some firebase error occurs
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // failure
+                Toast.makeText(context, "There was a database error when trying to add/remove your favourite selection", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // return the size of the favourites list
     @Override
     public int getItemCount() {
         return favorites.size();

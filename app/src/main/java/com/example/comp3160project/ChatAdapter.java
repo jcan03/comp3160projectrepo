@@ -15,13 +15,16 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
+    // initialize list for chat messages
     private List<ChatMessageModel> chatMessages;
 
+    // default constructor for chat adapter
     public ChatAdapter(List<ChatMessageModel> chatMessages)
     {
         this.chatMessages = chatMessages;
     }
 
+    // inflate view holder for each chat item using the single item layout
     @NonNull
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,6 +32,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return new ChatViewHolder(view);
     }
 
+    // bind all fields required for each chat message
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessageModel message = chatMessages.get(position);
@@ -37,6 +41,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         holder.timeSentTextView.setText(message.getFormattedTimestamp());
     }
 
+    // override get item count method with size of list
     @Override
     public int getItemCount() {
         return chatMessages.size();
