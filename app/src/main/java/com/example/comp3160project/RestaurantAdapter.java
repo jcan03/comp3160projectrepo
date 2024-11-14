@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,7 +62,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleFavorite(restaurant);
+                toggleFavorite(restaurant, holder);
             }
         });
 
@@ -80,6 +82,26 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 holder.itemView.getContext().startActivity(Intent.createChooser(shareIntent, "Share restaurant info via"));
             }
         });
+        //Check if the restaurant is liked
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
+        favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If the restaurant is already a favorite, set the icon to the favorite
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                } else {
+                    // If it's not a favorite, set the image to empty heart
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //error
+            }
+        });
     }
 
     // return the size of the restaurant list
@@ -88,7 +110,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         return restaurantList.size();
     }
 
-    private void toggleFavorite(Restaurant restaurant) {
+    private void toggleFavorite(Restaurant restaurant, RestaurantViewHolder holder) {
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
 
@@ -98,15 +120,24 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 if (dataSnapshot.exists()) {
                     // If the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
+
                 } else {
                     // If it's not a favorite, add it
                     favoriteRef.setValue(true);
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, "An error occured when trying to favourte that restaurant.", Toast.LENGTH_LONG).show();
+                //error
             }
         });
     }
