@@ -2,9 +2,12 @@ package com.example.comp3160project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
@@ -43,6 +46,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
     private List<Restaurant> restaurantsFull; // List for holding the original data
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private boolean searched = false;
 
     public SearchAdapter(Context context, List<Restaurant> restaurants) {
         this.context = context;
@@ -99,11 +103,30 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
                 holder.itemView.getContext().startActivity(Intent.createChooser(shareIntent, "Share restaurant info via"));
             }
         });
-
         holder.favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleFavorite(restaurant);
+                toggleFavorite(restaurant, holder);
+                //TODO: Add favorite / unfavorite animation
+            }
+        });
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
+        favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If the restaurant is already a favorite, set the icon to the favorite
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                } else {
+                    // If it's not a favorite, set the image to empty heart
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //error
             }
         });
     }
@@ -113,7 +136,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         return restaurants.size();
     }
 
-    private void toggleFavorite(Restaurant restaurant) {
+    private void toggleFavorite(Restaurant restaurant, RestaurantViewHolder holder) {
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
 
@@ -123,9 +146,18 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
                 if (dataSnapshot.exists()) {
                     // If the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
+
                 } else {
                     // If it's not a favorite, add it
                     favoriteRef.setValue(true);
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
                 }
             }
 
@@ -143,6 +175,11 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Restaurant> filteredList = new ArrayList<>();
+                if (!searched) { //wait until the user has searched before finalizing data
+                    restaurantsFull = new ArrayList<>(restaurants);
+                    searched = true;
+                }
+
                 if (constraint == null || constraint.length() == 0) {
                     filteredList.addAll(restaurantsFull);
                 } else {

@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,11 +56,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
                 .load(restaurant.getImageUrl())
                 .into(holder.restaurantImg);
 
-        // on click of favourite image, call toggleFavorite method
         holder.favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleFavorite(restaurant);
+                toggleFavorite(restaurant, holder);
             }
         });
 
@@ -79,37 +79,61 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
                 holder.itemView.getContext().startActivity(Intent.createChooser(shareIntent, "Share restaurant info via"));
             }
         });
-    }
+        //Check if the restaurant is liked
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
+        favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If the restaurant is already a favorite, set the icon to the favorite
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                } else {
+                    // If it's not a favorite, set the image to empty heart
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                }
+            }
 
-    // method which handles toggling and untoggling a favourite restaurant, adds to firebase if favourited, removes from firebase if not, all favourites then display in recycler view in the favourites fragment
-    private void toggleFavorite(Restaurant restaurant) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //error
+            }
+        });
+
+    }
+    private void toggleFavorite(Restaurant restaurant, RestaurantViewHolder holder) {
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
 
         favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                {
-                    // if the restaurant is already a favorite, remove it
+                if (dataSnapshot.exists()) {
+                    // If the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
-                }
-                else
-                {
-                    // if the restaurant is not a favorite, add it
+                    holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
+
+                } else {
+                    // If it's not a favorite, add it
                     favoriteRef.setValue(true);
+                    holder.favouriteButton.setImageResource(R.drawable.heart_full);
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
+                            , R.anim.heart_like);
+                    holder.favouriteButton.startAnimation(animation);
                 }
             }
 
-            // provide error message if some firebase error occurs
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, "There was a database error when trying to add/remove your favourite selection", Toast.LENGTH_LONG).show();
+                //error
             }
         });
+
     }
 
-    // return the size of the favourites list
     @Override
     public int getItemCount() {
         return favorites.size();

@@ -39,8 +39,9 @@
 
     <ImageButton
         android:id="@+id/shareButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_below="@id/favouriteRestaurantButton"
         android:layout_alignParentEnd="true"
         android:src="@drawable/share_icon"
@@ -48,8 +49,9 @@
 
     <ImageButton
         android:id="@+id/favouriteRestaurantButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentEnd="true"
         android:src="@drawable/favourite_icon"
         android:layout_marginRight="5dp"/>
