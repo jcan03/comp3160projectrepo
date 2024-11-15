@@ -57,9 +57,9 @@ public class ForYouFragment extends Fragment {
                     allRestaurants.add(restaurant);
                 }
 
-                // shuffle the restaurants and randomly display 4 restaurants in the recycler view
+                // shuffle the restaurants and randomly display 5 restaurants in the recycler view
                 Collections.shuffle(allRestaurants);
-                List<Restaurant> randomRestaurants = allRestaurants.subList(0, Math.min(4, allRestaurants.size()));
+                List<Restaurant> randomRestaurants = allRestaurants.subList(0, Math.min(5, allRestaurants.size()));
 
                 // clear current list and update RecyclerView
                 restaurantList.clear();
