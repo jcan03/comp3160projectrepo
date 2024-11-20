@@ -70,18 +70,6 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         holder.street.setText(restaurant.getStreet());
         holder.rating.setText(restaurant.getRating() + "★");
 
-        //Restaurant ClickListener
-        holder.name.setOnClickListener(view -> {
-
-            MainActivity mainActivity = (MainActivity) context;
-
-            //Create the fragment and pass the parameters to it.
-            ResturauntInfoFragment frag = new ResturauntInfoFragment().newInstance(restaurant.getName(), restaurant.getStreet(), restaurant.getId());
-            mainActivity.loadFragment(frag); // or whatever fragment you need
-
-            Toast.makeText(context, "Restaurant", Toast.LENGTH_SHORT).show();
-        });
-
         // load the image using glide library
         Glide.with(holder.itemView.getContext())
                 .load(restaurant.getImageUrl())
