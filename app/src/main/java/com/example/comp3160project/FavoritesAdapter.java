@@ -68,7 +68,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
             @Override
             public void onClick(View view) {
 
-                String shareText = "Check out this restaurant I found on Kamloops Restaurant Finder app!\n" +
+                String shareText = "Check out this restaurant I found on the Kamloops Local Restaurant Finder app!\n" +
                         "Name: " + restaurant.getName() + "\n" +
                         "Street: " + restaurant.getStreet() + "\n" +
                         "Rating: " + restaurant.getRating();
