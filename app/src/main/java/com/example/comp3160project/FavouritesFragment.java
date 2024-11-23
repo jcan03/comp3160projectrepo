@@ -3,6 +3,7 @@ package com.example.comp3160project;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class FavouritesFragment extends Fragment {
 
+    // declare variables
     private RecyclerView favoritesRecyclerView;
     private FavoritesAdapter favoritesAdapter;
     private List<Restaurant> favorites = new ArrayList<>();
@@ -50,24 +52,25 @@ public class FavouritesFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 favorites.clear();
                 if (dataSnapshot.exists()) {
-                    // Fetch each restaurant data in the favorites list
+                    // retrieve each restaurant data in the favourites list
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String restaurantId = snapshot.getKey();
                         fetchRestaurantData(restaurantId, dataSnapshot.getChildrenCount());
                     }
                 } else {
-                    // No favorites; update the adapter to reflect an empty list
+                    // even if there are no favourites, notify the adapter to show that
                     favoritesAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Log error if needed
+                // error
             }
         });
     }
 
+    // method to fetch restaurants and notify the adapter when all have been retrieved
     private void fetchRestaurantData(String restaurantId, long totalFavoritesCount) {
         DatabaseReference restaurantRef = FirebaseDatabase.getInstance().getReference("restaurants").child(restaurantId);
         restaurantRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -80,7 +83,7 @@ public class FavouritesFragment extends Fragment {
                     }
                 }
 
-                // Notify adapter once all data is fetched
+                // notify the favourites adapter once all data is fetched
                 if (favorites.size() == totalFavoritesCount || !dataSnapshot.exists()) {
                     favoritesAdapter.notifyDataSetChanged();
                 }
@@ -88,17 +91,18 @@ public class FavouritesFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Failed to load restaurant data: " + databaseError.getMessage());
+                Toast.makeText(getContext(), "There was a database error while trying to retrieve favourite restaurants", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // override onCreateView method for favourites fragment layout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        // Set up RecyclerView and Adapter
+        // et up RecyclerView and Adapter
         favoritesRecyclerView = view.findViewById(R.id.favouritesRecyclerView);
         favoritesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         favoritesAdapter = new FavoritesAdapter(getContext(), favorites);

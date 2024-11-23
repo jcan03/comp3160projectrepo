@@ -10,6 +10,7 @@
         android:orientation="vertical"
         android:padding="10dp">
 
+        <!-- recycler view -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatRecyclerView"
             android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- FrameLayout to hold EditText and microphone icon -->
+            <!-- frameLayout to hold edit text and microphone icon -->
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="60dp"
@@ -46,6 +47,7 @@
                     android:contentDescription="Voice input" />
             </FrameLayout>
 
+            <!-- image button for sending message -->
             <ImageButton
                 android:id="@+id/sendButton"
                 android:backgroundTint="#00FFFFFF"

@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ForYouFragment">
 
+    <!-- constraint layout with margin and vertical orientation -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8pt"
         android:orientation="vertical">
 
+        <!-- text view to indicate this is the for you fragment -->
         <TextView
             android:id="@+id/forYouTextView"
             android:layout_width="match_parent"
@@ -24,6 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- recycler view positioning -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forYouRecyclerView"
             android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
+    // declare variables
     private final Context context;
     private final List<Restaurant> favorites;
     private FirebaseAuth mAuth;
@@ -96,7 +98,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "A database error occured when trying to favourite or unfavourite that restaurant", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -128,12 +130,13 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RestaurantViewHolder>
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "A database error occured while trying to toggle a favourite restaurant", Toast.LENGTH_LONG).show();
             }
         });
 
     }
 
+    // override item count with array list size
     @Override
     public int getItemCount() {
         return favorites.size();

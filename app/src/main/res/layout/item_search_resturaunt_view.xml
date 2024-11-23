@@ -5,6 +5,7 @@
     android:layout_marginTop="10dp"
     android:background="@drawable/item_border">
 
+    <!-- image view for restaurant image -->
     <ImageView
         android:id="@+id/restaurantImage"
         android:layout_width="90dp"
@@ -14,6 +15,7 @@
         android:layout_marginLeft="10dp"
         android:paddingRight="10dp"/>
 
+    <!-- rating field styling -->
     <TextView
         android:id="@+id/rating"
         android:layout_width="200dp"
@@ -22,6 +24,8 @@
         android:layout_toEndOf="@id/restaurantImage"
         android:text="★5/5"
         android:textColorHighlight="@color/black"/>
+
+    <!-- restaurant name field styling -->
     <TextView
         android:id="@+id/name"
         android:layout_marginTop="10dp"
@@ -30,6 +34,7 @@
         android:layout_toEndOf="@id/restaurantImage"
         android:textColor="@color/black" />
 
+    <!-- restaurant address field styling -->
     <TextView
         android:id="@+id/street"
         android:layout_width="200dp"
@@ -37,6 +42,7 @@
         android:layout_toEndOf="@id/restaurantImage"
         android:layout_below="@id/name" />
 
+    <!-- share button styling -->
     <ImageButton
         android:id="@+id/shareButton"
         android:backgroundTint="#00FFFFFF"
@@ -47,6 +53,7 @@
         android:src="@drawable/share_icon"
         android:layout_marginRight="5dp"/>
 
+    <!-- favourite restaurant button styling -->
     <ImageButton
         android:id="@+id/favouriteRestaurantButton"
         android:backgroundTint="#00FFFFFF"

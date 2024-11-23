@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // declare variables/views
     private EditText emailField, passwordField;
     private TextView resetPasswordTV;
     private Button loginButton, signUpButton;

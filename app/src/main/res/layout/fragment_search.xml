@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".SearchFragment">
 
+    <!-- constraint layout with margin -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8pt">
 
+        <!-- search view which acts as an edit text -->
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
@@ -22,6 +24,7 @@
 
         </SearchView>
 
+        <!-- recycler view positioning -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecyclerView"
             android:layout_width="match_parent"

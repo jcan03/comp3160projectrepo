@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    // declare fields/variables
     private EditText emailField, passwordField, usernameField;
     private TextView backToLoginTV;
     private Button signUpButton;
@@ -80,7 +81,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                     finish();
                                 }
-                            } else { // if the email is not valid, has already registered, or the password length is too small, send toast
+                            }
+                            else
+                            { // if the email is not valid, has already registered, or the password length is too small, send toast
                                 Toast.makeText(SignUpActivity.this,  "You must enter a valid Email that has not already signed up and a Password with 6+ characters to register", Toast.LENGTH_LONG).show();
                             }
                         });

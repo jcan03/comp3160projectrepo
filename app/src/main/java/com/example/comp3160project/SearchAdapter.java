@@ -30,17 +30,7 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> implements Filterable {
 
-    public interface OnRestaurantClickListener {
-        void onRestaurantClick(Restaurant restaurant);
-    }
-
-    private OnRestaurantClickListener listener;
-
-    public SearchAdapter(Context context, List<Restaurant> restaurants, OnRestaurantClickListener listener) {
-        this.restaurants = restaurants;
-        this.listener = listener;
-    }
-
+    // declare variables
     private Context context;
     private List<Restaurant> restaurants;
     private List<Restaurant> restaurantsFull; // List for holding the original data
@@ -48,10 +38,11 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
     private DatabaseReference mDatabase;
     private boolean searched = false;
 
+    // constructor for search adapter
     public SearchAdapter(Context context, List<Restaurant> restaurants) {
         this.context = context;
         this.restaurants = restaurants;
-        this.restaurantsFull = new ArrayList<>(restaurants); // Copy of the original list
+        this.restaurantsFull = new ArrayList<>(restaurants); // get a copy of the original list
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
@@ -63,6 +54,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
         return new RestaurantViewHolder(view);
     }
 
+    // override view holder for displaying single recycler view item restaurant info
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         Restaurant restaurant = restaurants.get(position);
@@ -95,7 +87,6 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
             @Override
             public void onClick(View view) {
                 toggleFavorite(restaurant, holder);
-                //TODO: Add favorite / unfavorite animation
             }
         });
         String userId = mAuth.getCurrentUser().getUid();
@@ -114,11 +105,12 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "There was a database error when trying to retrieve your favourites", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // override count method by returning size of array list
     @Override
     public int getItemCount() {
         return restaurants.size();
@@ -132,17 +124,21 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // If the restaurant is already a favorite, remove it
+                    // if the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
                     holder.favouriteButton.setImageResource(R.drawable.heart_empty);
+
+                    // play animation after unfavouriting
                     Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
                             , R.anim.heart_like);
                     holder.favouriteButton.startAnimation(animation);
 
                 } else {
-                    // If it's not a favorite, add it
+                    // if it's not a favorite, add it
                     favoriteRef.setValue(true);
                     holder.favouriteButton.setImageResource(R.drawable.heart_full);
+
+                    // play animation after favouriting
                     Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
                             , R.anim.heart_like);
                     holder.favouriteButton.startAnimation(animation);
@@ -151,12 +147,12 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "There was an error when trying to add or remove your favourite restaurant selection", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-
+    // filter used when user starts typing in search bar
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -184,6 +180,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> im
                 return results;
             }
 
+            // override publish results method after filtering
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {

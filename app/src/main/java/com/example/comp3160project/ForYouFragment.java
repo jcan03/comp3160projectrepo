@@ -20,8 +20,9 @@ import java.util.List;
 
 public class ForYouFragment extends Fragment {
 
+    // declare variables
     private RecyclerView forYouRecyclerView;
-    private RestaurantAdapter restaurantAdapter; // Create this adapter
+    private RestaurantAdapter restaurantAdapter; //
     private List<Restaurant> restaurantList = new ArrayList<>();
 
     @Override

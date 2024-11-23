@@ -47,6 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return chatMessages.size();
     }
 
+    // view holder for chat item
     static class ChatViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView, messageTextView, timeSentTextView;
 

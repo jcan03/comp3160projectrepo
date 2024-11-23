@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
+    // declare variables
     public ImageView restaurantImg;
     public TextView name, street, rating;
     public ImageButton shareButton, favouriteButton;
 
+    // declare restaurant view holder and initialize fields
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
         restaurantImg = itemView.findViewById(R.id.restaurantImage);

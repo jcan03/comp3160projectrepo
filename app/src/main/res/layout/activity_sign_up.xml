@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- signup text view -->
     <TextView
         android:id="@+id/signUpTV"
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         android:textColor="@color/blue"
         android:layout_marginTop="20dp"/>
 
+    <!-- material email edit text with styling -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/registerEmailETLayout"
         android:layout_height="wrap_content"
@@ -32,6 +34,7 @@
             android:layout_marginTop="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- material edit text for password which allows for toggleable password view -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/registerPwdETLayout"
         app:passwordToggleEnabled="true"
@@ -49,6 +52,7 @@
             android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- material edit text for username edit text field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/registerUsernameETLayout"
         android:layout_height="wrap_content"
@@ -65,6 +69,7 @@
             android:layout_marginTop="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- signup button styling -->
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="match_parent"
@@ -74,13 +79,13 @@
         android:backgroundTint="@color/blue"
         android:textSize="20dp"/>
 
-    <!-- Space to push content upwards -->
+    <!-- provides large margin so back to login edit text is at bottom left -->
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <!-- TextView aligned to bottom left -->
+    <!-- back to login textview set to bottom left -->
     <TextView
         android:id="@+id/backToLoginTV"
         android:layout_width="wrap_content"

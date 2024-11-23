@@ -2,7 +2,10 @@ package com.example.comp3160project;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +28,7 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
+    // declare variables
     private DatabaseReference mDatabase;
     private RecyclerView searchRecyclerView;
     private SearchView restaurantSearch;
@@ -39,23 +44,24 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Firebase Auth and Database
+        // initialize Firebase Auth and Database
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Initialize restaurant list and adapter
+        // initialize restaurant list and adapter
         restaurants = new ArrayList<>();
         searchAdapter = new SearchAdapter(getContext(), restaurants);
 
-        // Load restaurants from Firebase
+        // call method to load restaurants from Firebase
         loadRestaurantsFromFirebase();
     }
 
+    // method that loads all of the restaurants from firebase and displays them in the recyclerview in search fragment
     private void loadRestaurantsFromFirebase() {
         mDatabase.child("restaurants").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                restaurants.clear(); // Clear existing data to avoid duplicates
+                restaurants.clear(); // clear existing data to avoid duplicates in recycler view
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Restaurant restaurant = snapshot.getValue(Restaurant.class);
                     if (restaurant != null) {
@@ -67,25 +73,26 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadRestaurants:onCancelled", databaseError.toException());
+                // error
             }
         });
     }
 
+    // override and inflate view for search fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Setup RecyclerView and SearchView
+        // setup RecyclerView and SearchView
         searchRecyclerView = view.findViewById(R.id.searchRecyclerView);
         restaurantSearch = view.findViewById(R.id.searchView);
 
-        // Configure RecyclerView with adapter
+        // configure RecyclerView with adapter
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         searchRecyclerView.setAdapter(searchAdapter);
 
-        // Setup search filtering
+        // setup search filtering
         restaurantSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

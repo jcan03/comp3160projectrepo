@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
+    <!-- card view to display each message -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,11 +12,13 @@
         android:background="@color/white"
         android:radius="12dp">
 
+        <!-- relative layout, padding between each item -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
 
+            <!-- username field styling -->
             <TextView
                 android:id="@+id/usernameTextView"
                 android:layout_width="wrap_content"
@@ -28,6 +31,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
+            <!-- message field styling -->
             <TextView
                 android:id="@+id/messageTextView"
                 android:layout_width="wrap_content"
@@ -38,6 +42,7 @@
                 android:layout_below="@id/usernameTextView"
                 android:layout_marginTop="4dp"/>
 
+            <!-- time sent message styling -->
             <TextView
                 android:id="@+id/timeSentTextView"
                 android:layout_width="wrap_content"

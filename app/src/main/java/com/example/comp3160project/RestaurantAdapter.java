@@ -23,12 +23,13 @@ import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
+    // declare variables
     private List<Restaurant> restaurantList;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private Context context;
 
-    // Constructor for the adapter
+    // constructor for restaurant adapter
     public RestaurantAdapter(Context context, List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
         this.context = context;
@@ -82,24 +83,25 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 holder.itemView.getContext().startActivity(Intent.createChooser(shareIntent, "Share restaurant info via"));
             }
         });
-        //Check if the restaurant is liked
+
+        // check if the restaurant is liked
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
         favoriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // If the restaurant is already a favorite, set the icon to the favorite
+                    // if the restaurant is already a favorite, set the icon to the favorite
                     holder.favouriteButton.setImageResource(R.drawable.heart_full);
                 } else {
-                    // If it's not a favorite, set the image to empty heart
+                    // if it's not a favorite, set the image to empty heart
                     holder.favouriteButton.setImageResource(R.drawable.heart_empty);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "There was a database error while trying to favourite or unfavourite that restaurant", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -110,6 +112,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         return restaurantList.size();
     }
 
+    // method to toggle favourite (favourite or unfavourite restaurants)
     private void toggleFavorite(Restaurant restaurant, RestaurantViewHolder holder) {
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference favoriteRef = mDatabase.child("UserFavourites").child(userId).child("favourites").child(restaurant.getId());
@@ -118,26 +121,28 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // If the restaurant is already a favorite, remove it
+                    // if the restaurant is already a favorite, remove it
                     favoriteRef.removeValue();
                     holder.favouriteButton.setImageResource(R.drawable.heart_empty);
-                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
-                            , R.anim.heart_like);
+
+                    // play animation for favouriting/unfavouriting restaurant
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext(), R.anim.heart_like);
                     holder.favouriteButton.startAnimation(animation);
 
                 } else {
-                    // If it's not a favorite, add it
+                    // if it's not a favorite, add it
                     favoriteRef.setValue(true);
                     holder.favouriteButton.setImageResource(R.drawable.heart_full);
-                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext()
-                            , R.anim.heart_like);
+
+                    // play animation for favouriting/unfavouriting restaurant
+                    Animation animation = AnimationUtils.loadAnimation(context.getApplicationContext(), R.anim.heart_like);
                     holder.favouriteButton.startAnimation(animation);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error
+                Toast.makeText(context, "There was a database error while trying to update your favourite selection", Toast.LENGTH_LONG).show();
             }
         });
     }

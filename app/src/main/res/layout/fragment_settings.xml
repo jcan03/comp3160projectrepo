@@ -7,10 +7,12 @@
     tools:context=".SettingsFragment"
     android:padding="16dp">
 
+    <!-- constraint layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- image view for settings image -->
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
@@ -24,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.15" />
 
+        <!-- settings text view styling -->
         <TextView
             android:id="@+id/settingsTextView"
             android:layout_width="wrap_content"
@@ -36,6 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+        <!-- delete account button styling -->
         <Button
             android:id="@+id/deleteAccountButton"
             android:layout_width="match_parent"
@@ -47,6 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsTextView" />
 
+        <!-- log out button styling -->
         <Button
             android:id="@+id/logOutButton"
             android:layout_width="match_parent"

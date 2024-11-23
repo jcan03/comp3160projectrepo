@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class SettingsFragment extends Fragment {
 
+    // declare variables
     private DatabaseReference userRef;
     private Button deleteAccountBtn, logOutBtn;
     private FirebaseAuth auth;
@@ -39,7 +40,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;  // Set context when fragment is attached
+        this.context = context;  // set context when fragment is attached
     }
 
     @Override
@@ -126,7 +127,7 @@ public class SettingsFragment extends Fragment {
         }
         else
         { // if somehow no user is logged in, provide toast
-           Toast.makeText(context,"No user is logged in", Toast.LENGTH_LONG).show();
+           Toast.makeText(context,"No user is logged in, try logging back in", Toast.LENGTH_LONG).show();
         }
     }
 

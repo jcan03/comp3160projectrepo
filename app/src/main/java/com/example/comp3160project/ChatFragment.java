@@ -39,6 +39,7 @@ import java.util.Locale;
 
 public class ChatFragment extends Fragment {
 
+    // declare variables
     private FirebaseAuth auth;
     private DatabaseReference messageRef, userRef;
     private EditText messageField;

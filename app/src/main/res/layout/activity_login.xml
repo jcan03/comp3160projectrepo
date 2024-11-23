@@ -3,8 +3,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"> <!-- padding around all sides -->
 
+    <!-- text view to tell user to login -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -15,6 +16,7 @@
         android:textStyle="bold"
         android:layout_marginTop="20dp"/>
 
+    <!-- material textfield to allow for email edit text styling -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/loginEmailETLayout"
         android:layout_height="wrap_content"
@@ -31,12 +33,13 @@
             android:layout_marginTop="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- material text field to allow for password edit text styling -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/loginPasswordETLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"> <!-- allows user to show or hide password -->
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/loginPasswordField"
@@ -48,6 +51,7 @@
         android:background="@drawable/edit_text_styling"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- login button styling -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
@@ -57,6 +61,7 @@
         android:layout_marginTop="20dp"
         android:text="Login" />
 
+    <!-- reset password textview -->
     <TextView
         android:id="@+id/resetPasswordTV"
         android:layout_width="match_parent"
@@ -67,6 +72,7 @@
         android:textStyle="bold"
         android:textAlignment="textEnd" />
 
+    <!-- textview to provide information to signup if the user is new -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -77,6 +83,7 @@
         android:textAlignment="center"
         android:textStyle="bold"/>
 
+    <!-- signup button to redirect to new activity -->
     <Button
         android:id="@+id/loginActivitySignUpButton"
         android:layout_width="match_parent"
